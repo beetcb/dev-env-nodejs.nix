@@ -7,29 +7,28 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
-    # support all the platforms that are supported by nix.
+    # support all the platforms dynamically.
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        envRaw = ''
-          # add node npm pkgs to $PATH.
-          layout node
-          # load reproducible dev environment declaration.
-          use flake . --impure
-        '';
+        scripts = {
+          # add node pkgs to $PATH so we can
+          # pin global npm pkgs with package-lock.json.
+          pathAddNodePkgs = "export PATH=./node_modules/.bin:$PATH";
+          # use yarn or npm of your own choice.
+          npmInstall = "npm install";
+        };
       in
       rec {
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
             nodejs-14_x
-            nix-direnv
           ];
 
           shellHook = ''
-            node --version
-            echo "${envRaw}" >> .env &&
-            direnv allow . &&
-            npm i
+            ${scripts.pathAddNodePkgs} &&
+            ${scripts.npmInstall} &&
+            echo "Nodejs Version: $(node --version)"
           '';
         };
       }
