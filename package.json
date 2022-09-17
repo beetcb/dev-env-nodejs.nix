@@ -1,0 +1,25 @@
+{
+  "name": "dev-env-nodejs.nix",
+  "version": "0.0.0",
+  "description": "A reproducible, declarative environment with nodejs toolings/pkgs",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beetcb/dev-env-nodejs.nix.git"
+  },
+  "keywords": [
+    "nixos",
+    "nix"
+  ],
+  "author": "beetcb",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/beetcb/dev-env-nodejs.nix/issues"
+  },
+  "homepage": "https://github.com/beetcb/dev-env-nodejs.nix#readme",
+  "devDependencies": {
+    "typescript": "^4.8.3",
+    "whistle": "^2.9.30"
+  }
+}
