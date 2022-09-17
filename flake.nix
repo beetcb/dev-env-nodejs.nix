@@ -7,27 +7,30 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
+    let
+      scripts = {
+        # add node pkgs to $PATH so we can
+        # pin global npm pkgs with package-lock.json.
+        pathAddNodePkgs = "export PATH=./node_modules/.bin:$PATH";
+        # use yarn or npm or pnpm.
+        depsInstall = "yarn";
+      };
+    in
     # support all the platforms dynamically.
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        scripts = {
-          # add node pkgs to $PATH so we can
-          # pin global npm pkgs with package-lock.json.
-          pathAddNodePkgs = "export PATH=./node_modules/.bin:$PATH";
-          # use yarn or npm of your own choice.
-          npmInstall = "npm install";
-        };
       in
-      rec {
+      {
         devShell = pkgs.mkShell {
-          buildInputs = with pkgs; [
+          buildInputs = with pkgs; with pkgs.nodePackages; [
             nodejs-14_x
+            yarn
           ];
 
           shellHook = ''
             ${scripts.pathAddNodePkgs} &&
-            ${scripts.npmInstall} &&
+            ${scripts.depsInstall} &&
             echo "Nodejs Version: $(node --version)"
           '';
         };
