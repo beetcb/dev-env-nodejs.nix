@@ -29,8 +29,8 @@
           ];
 
           shellHook = ''
-            ${scripts.pathAddNodePkgs} &&
-            ${scripts.depsInstall} &&
+            ${scripts.pathAddNodePkgs} 
+            ${scripts.depsInstall} 
             echo "Nodejs Version: $(node --version)"
           '';
         };
